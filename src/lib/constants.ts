@@ -10,13 +10,13 @@ export const DEFAULT_EVENT_SOURCE_OPTIONS: EventSourceOptions = {
   events: EMPTY_EVENT_HANDLERS,
 };
 export const SOCKET_IO_PING_INTERVAL = 25 * SECONDS;
-export const SOCKET_IO_PATH = '/socket.io/?EIO=3&transport=websocket';
-export const SOCKET_IO_PING_CODE = '2';
+export const SOCKET_IO_PATH = "/socket.io/?EIO=3&transport=websocket";
+export const SOCKET_IO_PING_CODE = "2";
 export const DEFAULT_RECONNECT_LIMIT = 20;
 export const DEFAULT_RECONNECT_INTERVAL_MS = 5000;
 export const UNPARSABLE_JSON_OBJECT = {};
 export const DEFAULT_HEARTBEAT = {
-  message: 'ping',
+  message: "ping",
   timeout: 60000,
   interval: 25000,
 };
@@ -31,11 +31,12 @@ export enum ReadyState {
 
 const eventSourceSupported = () => {
   try {
-    return 'EventSource' in globalThis;
+    return "EventSource" in globalThis;
   } catch (e) {
     return false;
   }
-}
+};
 
-export const isReactNative = typeof navigator !== 'undefined' && navigator.product === 'ReactNative';
+export const isReactNative =
+  typeof navigator !== "undefined" && navigator.product === "ReactNative";
 export const isEventSourceSupported = !isReactNative && eventSourceSupported();
