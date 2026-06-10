@@ -1,4 +1,4 @@
-import { heartbeat } from "./heartbeat";
+import { heartbeat } from "../lib/heartbeat";
 
 describe("heartbeat", () => {
   let ws: WebSocket;
@@ -45,7 +45,11 @@ describe("heartbeat", () => {
   });
 
   test("does not close the WebSocket if messageCallback is invoked within the specified timeout", () => {
-    const onMessageCb = heartbeat(ws, { current: Date.now() }, { timeout: 100 });
+    const onMessageCb = heartbeat(
+      ws,
+      { current: Date.now() },
+      { timeout: 100 },
+    );
     expect(closeSpy).not.toHaveBeenCalled();
     jest.advanceTimersByTime(99);
     onMessageCb();
@@ -64,15 +68,18 @@ describe("heartbeat", () => {
 
   test("sends a ping message using a function", () => {
     function nextPing(id: number) {
-      return 'msg' + (id);
+      return "msg" + id;
     }
 
     const lastMessageTime = { current: Date.now() };
-    heartbeat(ws, lastMessageTime, { message: () => nextPing(33), interval: 100 });
+    heartbeat(ws, lastMessageTime, {
+      message: () => nextPing(33),
+      interval: 100,
+    });
     expect(sendSpy).not.toHaveBeenCalled();
     jest.advanceTimersByTime(101);
-    expect(sendSpy).toHaveBeenCalledWith('msg33');
+    expect(sendSpy).toHaveBeenCalledWith("msg33");
     jest.advanceTimersByTime(100);
-    expect(sendSpy).toHaveBeenCalledWith('msg33');
+    expect(sendSpy).toHaveBeenCalledWith("msg33");
   });
 });

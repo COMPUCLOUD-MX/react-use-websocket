@@ -1,9 +1,14 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { flushSync } from 'react-dom';
-import { DEFAULT_OPTIONS, isEventSourceSupported, ReadyState, UNPARSABLE_JSON_OBJECT } from './constants';
-import { createOrJoinSocket } from './create-or-join';
-import { getUrl } from './get-url';
-import websocketWrapper from './proxy';
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { flushSync } from "react-dom";
+import {
+  DEFAULT_OPTIONS,
+  isEventSourceSupported,
+  ReadyState,
+  UNPARSABLE_JSON_OBJECT,
+} from "./constants";
+import { createOrJoinSocket } from "./create-or-join";
+import { getUrl } from "./get-url";
+import websocketWrapper from "./proxy";
 import {
   Options,
   ReadyStateState,
@@ -12,15 +17,17 @@ import {
   WebSocketMessage,
   WebSocketHook,
   WebSocketLike,
-} from './types';
-import { assertIsWebSocket } from './util';
+} from "./types";
+import { assertIsWebSocket } from "./util";
 
 export const useWebSocket = <T = unknown>(
   url: string | (() => string | Promise<string>) | null,
   options: Options = DEFAULT_OPTIONS,
   connect: boolean = true,
 ): WebSocketHook<T> => {
-  const [lastMessage, setLastMessage] = useState<WebSocketEventMap['message'] | null>(null);
+  const [lastMessage, setLastMessage] = useState<
+    WebSocketEventMap["message"] | null
+  >(null);
   const [readyState, setReadyState] = useState<ReadyStateState>({});
   const lastJsonMessage: T = useMemo(() => {
     if (!options.disableJson && lastMessage) {
@@ -43,17 +50,19 @@ export const useWebSocket = <T = unknown>(
   optionsCache.current = options;
 
   const readyStateFromUrl: ReadyState =
-    convertedUrl.current && readyState[convertedUrl.current] !== undefined ?
-      readyState[convertedUrl.current] :
-      url !== null && connect === true ?
-        ReadyState.CONNECTING :
-        ReadyState.UNINSTANTIATED;
+    convertedUrl.current && readyState[convertedUrl.current] !== undefined
+      ? readyState[convertedUrl.current]
+      : url !== null && connect === true
+        ? ReadyState.CONNECTING
+        : ReadyState.UNINSTANTIATED;
 
-  const stringifiedQueryParams = options.queryParams ? JSON.stringify(options.queryParams) : null;
+  const stringifiedQueryParams = options.queryParams
+    ? JSON.stringify(options.queryParams)
+    : null;
 
   const sendMessage: SendMessage = useCallback((message, keep = true) => {
     if (isEventSourceSupported && webSocketRef.current instanceof EventSource) {
-      console.warn('Unable to send a message from an eventSource');
+      console.warn("Unable to send a message from an eventSource");
       return;
     }
 
@@ -65,12 +74,18 @@ export const useWebSocket = <T = unknown>(
     }
   }, []);
 
-  const sendJsonMessage: SendJsonMessage = useCallback((message, keep = true) => {
-    sendMessage(JSON.stringify(message), keep);
-  }, [sendMessage]);
+  const sendJsonMessage: SendJsonMessage = useCallback(
+    (message, keep = true) => {
+      sendMessage(JSON.stringify(message), keep);
+    },
+    [sendMessage],
+  );
 
   const getWebSocket = useCallback(() => {
-    if (optionsCache.current.share !== true || (isEventSourceSupported && webSocketRef.current instanceof EventSource)) {
+    if (
+      optionsCache.current.share !== true ||
+      (isEventSourceSupported && webSocketRef.current instanceof EventSource)
+    ) {
       return webSocketRef.current;
     }
 
@@ -92,17 +107,23 @@ export const useWebSocket = <T = unknown>(
         convertedUrl.current = await getUrl(url, optionsCache);
 
         if (convertedUrl.current === null) {
-          console.error('Failed to get a valid URL. WebSocket connection aborted.');
-          convertedUrl.current = 'ABORTED';
-          flushSync(() => setReadyState(prev => ({
-            ...prev,
-            ABORTED: ReadyState.CLOSED,
-          })));
+          console.error(
+            "Failed to get a valid URL. WebSocket connection aborted.",
+          );
+          convertedUrl.current = "ABORTED";
+          flushSync(() =>
+            setReadyState((prev) => ({
+              ...prev,
+              ABORTED: ReadyState.CLOSED,
+            })),
+          );
 
           return;
         }
 
-        const protectedSetLastMessage = (message: WebSocketEventMap['message']) => {
+        const protectedSetLastMessage = (
+          message: WebSocketEventMap["message"],
+        ) => {
           if (!expectClose) {
             flushSync(() => setLastMessage(message));
           }
@@ -110,10 +131,12 @@ export const useWebSocket = <T = unknown>(
 
         const protectedSetReadyState = (state: ReadyState) => {
           if (!expectClose) {
-            flushSync(() => setReadyState(prev => ({
-              ...prev,
-              ...(convertedUrl.current && { [convertedUrl.current]: state }),
-            })));
+            flushSync(() =>
+              setReadyState((prev) => ({
+                ...prev,
+                ...(convertedUrl.current && { [convertedUrl.current]: state }),
+              })),
+            );
           }
         };
 
@@ -150,16 +173,18 @@ export const useWebSocket = <T = unknown>(
       };
     } else if (url === null || connect === false) {
       reconnectCount.current = 0; // reset reconnection attempts
-      setReadyState(prev => ({
+      setReadyState((prev) => ({
         ...prev,
-        ...(convertedUrl.current && { [convertedUrl.current]: ReadyState.CLOSED }),
+        ...(convertedUrl.current && {
+          [convertedUrl.current]: ReadyState.CLOSED,
+        }),
       }));
     }
   }, [url, connect, stringifiedQueryParams, sendMessage]);
 
   useEffect(() => {
     if (readyStateFromUrl === ReadyState.OPEN) {
-      messageQueue.current.splice(0).forEach(message => {
+      messageQueue.current.splice(0).forEach((message) => {
         sendMessage(message);
       });
     }

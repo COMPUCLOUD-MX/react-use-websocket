@@ -1,15 +1,20 @@
-import { MutableRefObject } from 'react';
-import { attachSharedListeners } from './attach-shared-listeners';
+import { MutableRefObject } from "react";
+import { attachSharedListeners } from "../lib/attach-shared-listeners";
 import WS from "jest-websocket-mock";
-import { Options, Subscriber } from './types';
-import { ReadyState } from './constants';
-import { sharedWebSockets } from './globals';
-import { addSubscriber, removeSubscriber, getSubscribers, hasSubscribers } from './manage-subscribers';
+import { Options, Subscriber } from "../lib/types";
+import { ReadyState } from "../lib/constants";
+import { sharedWebSockets } from "../lib/globals";
+import {
+  addSubscriber,
+  removeSubscriber,
+  getSubscribers,
+  hasSubscribers,
+} from "../lib/manage-subscribers";
 
 let server: WS;
-const URL = 'ws://localhost:1234';
+const URL = "ws://localhost:1234";
 
-const noop = () => { };
+const noop = () => {};
 const DEFAULT_OPTIONS: Options = {};
 let client: WebSocket;
 let subscriber1: Subscriber;
@@ -23,11 +28,11 @@ beforeEach(async () => {
   client = new WebSocket(URL);
   reconnectCountRef = { current: 0 };
   optionRef = { current: { ...DEFAULT_OPTIONS } };
+  lastMessageTimeRef = { current: Date.now() };
   if (hasSubscribers(URL)) {
     removeSubscriber(URL, subscriber1);
     removeSubscriber(URL, subscriber2);
   }
-
 
   subscriber1 = {
     setLastMessage: noop,
@@ -36,7 +41,7 @@ beforeEach(async () => {
     reconnectCount: reconnectCountRef,
     lastMessageTime: lastMessageTimeRef,
     reconnect: { current: noop },
-  }
+  };
 
   subscriber2 = {
     setLastMessage: noop,
@@ -45,7 +50,7 @@ beforeEach(async () => {
     reconnectCount: reconnectCountRef,
     lastMessageTime: lastMessageTimeRef,
     reconnect: { current: noop },
-  }
+  };
 
   addSubscriber(URL, subscriber1);
   addSubscriber(URL, subscriber2);
@@ -57,42 +62,32 @@ afterEach(() => {
   WS.clean();
 });
 
-test('It attaches handlers to the websocket that updates all subscribers on messages', () => {
+test("It attaches handlers to the websocket that updates all subscribers on messages", () => {
   const [sub1, sub2] = getSubscribers(URL);
   const sub1MsgSetter = jest.fn((msg: any) => null);
   const sub2MsgSetter = jest.fn((msg: any) => null);
   sub1.setLastMessage = sub1MsgSetter;
   sub2.setLastMessage = sub2MsgSetter;
 
-  attachSharedListeners(
-    client,
-    URL,
-    optionRef,
-    noop,
-  );
+  attachSharedListeners(client, URL, optionRef, noop);
 
-  server.send('hello');
+  server.send("hello");
 
-  expect(sub1MsgSetter.mock.calls[0][0].data).toEqual('hello');
-  expect(sub2MsgSetter.mock.calls[0][0].data).toEqual('hello');
-})
+  expect(sub1MsgSetter.mock.calls[0][0].data).toEqual("hello");
+  expect(sub2MsgSetter.mock.calls[0][0].data).toEqual("hello");
+});
 
-test('It attaches handlers to the websocket that updates all subscribers on ready state events', () => {
+test("It attaches handlers to the websocket that updates all subscribers on ready state events", () => {
   const [sub1, sub2] = getSubscribers(URL);
   const sub1ReadyStateSetter = jest.fn((readyState: ReadyState) => null);
   const sub2ReadyStateSetter = jest.fn((readyState: ReadyState) => null);
   sub1.setReadyState = sub1ReadyStateSetter;
   sub2.setReadyState = sub2ReadyStateSetter;
 
-  attachSharedListeners(
-    client,
-    URL,
-    optionRef,
-    noop,
-  );
+  attachSharedListeners(client, URL, optionRef, noop);
 
   server.close();
 
   expect(sub1ReadyStateSetter).toHaveBeenCalled();
   expect(sub2ReadyStateSetter).toHaveBeenCalled();
-})
+});
