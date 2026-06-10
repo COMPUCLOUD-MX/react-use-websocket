@@ -1,6 +1,6 @@
 {
-  "name": "react-use-websocket",
-  "version": "4.13.0",
+  "name": "@compucloud-mx/react-use-websocket",
+  "version": "1.0.0",
   "description": "React Hook for WebSocket communication",
   "main": "./dist/index.js",
   "files": [
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robtaussig/react-use-websocket.git"
+    "url": "git+https://github.com/COMPUCLOUD-MX/react-use-websocket.git"
   },
   "types": "./dist/index.d.ts",
   "devDependencies": {
@@ -68,11 +68,10 @@
     "websocket",
     "websockets"
   ],
-  "author": "Robert Taussig <robert.taussig@gmail.com> (robtaussig.com)",
+  "author": "Jorge Cazarez <jorge.cazarez@compucloud.com.mx> (compucloud.com.mx)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/robtaussig/react-use-websocket/issues"
+    "url": "https://github.com/COMPUCLOUD-MX/react-use-websocket/issues"
   },
-  "homepage": "https://github.com/robtaussig/react-use-websocket#readme",
-  "packageManager": "yarn@4.5.0"
+  "homepage": "https://github.com/COMPUCLOUD-MX/react-use-websocket#readme"
 }
