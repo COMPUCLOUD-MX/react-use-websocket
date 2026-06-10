@@ -8,10 +8,10 @@
     "dist"
   ],
   "scripts": {
-    "test": "cross-env node_modules/.bin/jest --verbose --no-cache",
-    "clear-dist": "cross-env rm -rf dist/",
-    "compile": "cross-env node_modules/.bin/tsc -p .",
-    "push": "cross-env npm run test && npm run clear-dist && npm run compile && npm publish"
+    "test": "bun test",
+    "clear-dist": "rm -rf dist/",
+    "compile": "tsc -p .",
+    "push": "bun run test && bun run clear-dist && bun run compile && bun publish"
   },
   "repository": {
     "type": "git",
