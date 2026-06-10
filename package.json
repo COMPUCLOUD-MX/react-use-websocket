@@ -68,7 +68,7 @@
     "websocket",
     "websockets"
   ],
-  "author": "Jorge Cazarez <jorge.cazarez@compucloud.com.mx> (compucloud.com.mx)",
+  "author": "Compucloud",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/COMPUCLOUD-MX/react-use-websocket/issues"
