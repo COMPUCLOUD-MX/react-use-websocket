@@ -20,6 +20,7 @@ beforeEach(async () => {
   client = new WebSocket("ws://localhost:1234");
   reconnectCountRef = { current: 0 };
   optionRef = { current: { ...DEFAULT_OPTIONS } };
+  lastMessageTimeRef = { current: Date.now() };
 });
 
 afterEach(() => {

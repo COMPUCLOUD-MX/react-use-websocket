@@ -1,4 +1,4 @@
-import { heartbeat } from "./heartbeat";
+import { heartbeat } from "../lib/heartbeat";
 
 describe("heartbeat", () => {
   let ws: WebSocket;

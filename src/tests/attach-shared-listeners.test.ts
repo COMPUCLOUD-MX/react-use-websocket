@@ -1,15 +1,15 @@
 import { MutableRefObject } from "react";
-import { attachSharedListeners } from "./attach-shared-listeners";
+import { attachSharedListeners } from "../lib/attach-shared-listeners";
 import WS from "jest-websocket-mock";
-import { Options, Subscriber } from "./types";
-import { ReadyState } from "./constants";
-import { sharedWebSockets } from "./globals";
+import { Options, Subscriber } from "../lib/types";
+import { ReadyState } from "../lib/constants";
+import { sharedWebSockets } from "../lib/globals";
 import {
   addSubscriber,
   removeSubscriber,
   getSubscribers,
   hasSubscribers,
-} from "./manage-subscribers";
+} from "../lib/manage-subscribers";
 
 let server: WS;
 const URL = "ws://localhost:1234";
@@ -28,6 +28,7 @@ beforeEach(async () => {
   client = new WebSocket(URL);
   reconnectCountRef = { current: 0 };
   optionRef = { current: { ...DEFAULT_OPTIONS } };
+  lastMessageTimeRef = { current: Date.now() };
   if (hasSubscribers(URL)) {
     removeSubscriber(URL, subscriber1);
     removeSubscriber(URL, subscriber2);

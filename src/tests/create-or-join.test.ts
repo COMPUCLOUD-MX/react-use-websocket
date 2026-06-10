@@ -1,12 +1,12 @@
 import { MutableRefObject } from "react";
-import { createOrJoinSocket } from "./create-or-join";
+import { createOrJoinSocket } from "../lib/create-or-join";
 import WS from "jest-websocket-mock";
-import { Options } from "./types";
+import { Options } from "../lib/types";
 import {
   removeSubscriber,
   getSubscribers,
   hasSubscribers,
-} from "./manage-subscribers";
+} from "../lib/manage-subscribers";
 
 let server: WS;
 const URL = "ws://localhost:1234";
@@ -25,6 +25,7 @@ beforeEach(async () => {
   reconnectCountRef = { current: 0 };
   optionRef = { current: { ...DEFAULT_OPTIONS } };
   noopRef = { current: noop };
+  lastMessageTimeRef = { current: Date.now() };
   if (hasSubscribers(URL)) {
     getSubscribers(URL).forEach((sub) => removeSubscriber(URL, sub));
   }
