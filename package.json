@@ -1,6 +1,6 @@
 {
-  "name": "react-use-websocket",
-  "version": "4.13.0",
+  "name": "@compucloud-mx/react-use-websocket",
+  "version": "1.0.0",
   "description": "React Hook for WebSocket communication",
   "main": "./dist/index.js",
   "files": [
@@ -8,14 +8,14 @@
     "dist"
   ],
   "scripts": {
-    "test": "cross-env node_modules/.bin/jest --verbose --no-cache",
-    "clear-dist": "cross-env rm -rf dist/",
-    "compile": "cross-env node_modules/.bin/tsc -p .",
-    "push": "cross-env npm run test && npm run clear-dist && npm run compile && npm publish"
+    "test": "bun test",
+    "clear-dist": "rm -rf dist/",
+    "compile": "tsc -p .",
+    "push": "bun run test && bun run clear-dist && bun run compile && bun publish"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robtaussig/react-use-websocket.git"
+    "url": "git+https://github.com/COMPUCLOUD-MX/react-use-websocket.git"
   },
   "types": "./dist/index.d.ts",
   "devDependencies": {
@@ -68,11 +68,10 @@
     "websocket",
     "websockets"
   ],
-  "author": "Robert Taussig <robert.taussig@gmail.com> (robtaussig.com)",
+  "author": "Compucloud",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/robtaussig/react-use-websocket/issues"
+    "url": "https://github.com/COMPUCLOUD-MX/react-use-websocket/issues"
   },
-  "homepage": "https://github.com/robtaussig/react-use-websocket#readme",
-  "packageManager": "yarn@4.5.0"
+  "homepage": "https://github.com/COMPUCLOUD-MX/react-use-websocket#readme"
 }
